@@ -1,0 +1,8 @@
+*.o
+*.a
+/skynet.pid
+luaclib.*
+*.so
+*.dSYM
+.DS_Store
+.vscode
