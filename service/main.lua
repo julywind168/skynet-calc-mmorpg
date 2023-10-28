@@ -12,8 +12,8 @@ skynet.start(function()
 	end
 
 	skynet.newservice("debug_console", 9999)
-	skynet.newservice("calculator", 4)
-	skynet.newservice("gate")
+	skynet.newservice("calculator", "worker.lua", 4)
+	skynet.newservice("game")
 	
 	skynet.exit()
 end)

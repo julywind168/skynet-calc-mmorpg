@@ -1,3 +1,14 @@
+local CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+function string.random_str(length)
+    local result = {}
+    for i = 1, length do
+        local idx = math.random(1, #CHARS)
+        table.insert(result, CHARS:sub(idx, idx))
+    end
+    return table.concat(result)
+end
+
 function string:trim()
     return (self:gsub("^%s*(.-)%s*$", "%1"))
 end

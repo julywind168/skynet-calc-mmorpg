@@ -1,17 +1,15 @@
 local calc = require "skynet.calc"
+local LobbyPlayer = require "gameclass.LobbyPlayer"
 
 
-return function(game, LOCK)
 
-    LOCK("lobby")(function ()
-        function game:login(pid, ip)
-            calc.error(string.format("player %s login from: %s", pid, ip))
-            self.lobby.players[pid] = {
-                id = pid,
-                ip = ip
-            }
+return function(game, lock, new)
+
+    lock("lobby")(function ()
+        function game:login(pid, p)
+            calc.error(string.format("player login ok, %s", table.tostring(p)))
+            self.lobby.players[pid] = new(LobbyPlayer, p)
             self.lobby.online = self.lobby.online + 1
-            return self.lobby.players[pid]
         end
 
         function game:logout(pid)
