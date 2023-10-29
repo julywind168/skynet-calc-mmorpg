@@ -28,18 +28,18 @@ local function newclient(conn, id, pid)
 		token = string.random_str(8) 		-- for reconnect auth
 	}
 
-	function self:update(newconn)
+	function self.update(newconn)
 		conn.client = nil
 		conn.close()
 		conn = newconn
 	end
 
-	function self:close()
+	function self.close()
 		conn.client = nil
 		conn.close()
 	end
 
-	function self:send(msg)
+	function self.send(msg)
 		self.msgidx = self.msgidx + 1
 		self.msgcache[self.msgidx] = msg
 
@@ -50,7 +50,7 @@ local function newclient(conn, id, pid)
 		conn.send(msg)
 	end
 
-	function self:disconnect()
+	function self.disconnect()
 		self.connected = false
 	end
 
@@ -65,6 +65,15 @@ return function (calc)
 
 	local self = {}
 
+	function self:send_push(pid, msg)
+		local c = client_map[pid]
+		if c then
+			c.send(msg)
+		else
+			skynet.error(string.format("Push error, can't found player %s", pid))
+		end
+	end
+
 	function self.connect(conn)
 
 		conn.verified = false
@@ -75,7 +84,7 @@ return function (calc)
 				dump("Login OK", p)
 				local old_c = client_map[p.id]
 				if old_c then
-					old_c:close()
+					old_c.close()
 				end
 
 				calc.call("login", p.id, p)
@@ -108,7 +117,7 @@ return function (calc)
 				return
 			end
 
-			c:update(conn)
+			c.update(conn)
 			conn.verified = true
 			conn.client = c
 
@@ -120,9 +129,11 @@ return function (calc)
 
 		function conn.message(msg)
 			if conn.verified == false then
+				-- msg: {cmd = "login", id = "xx", password = "123"}
 				if msg.cmd == "login" then
 					login(msg)
 				else
+					-- msg: {cmd = "reconnect", id = "xx", token = "xxx", msgidx = 0}
 					assert(msg.cmd == "reconnect")
 					reconnect(msg)
 				end
@@ -134,31 +145,19 @@ return function (calc)
 				local session = msg.session
 				local action = msg.action
 
-				local r, push = calc.call(table.unpack(action))
+				local r = calc.call(table.unpack(action))
 
 				if session > 0 then
+					r = r or {}
 					r.session = session
-					c:send(r)
-				end
-
-				if push then
-					for msg,players in pairs(push) do
-						for i,pid in ipairs(players) do
-							c = client_map[pid]
-							if c then
-								c:send(msg)
-							else
-								skynet.error(string.format("Push error, not found player %s", pid))
-							end
-						end
-					end
+					c.send(r)
 				end
 			end
 		end
 
 		function conn.disconnect()
 			if conn.client then
-				conn.client:disconnect()
+				conn.client.disconnect()
 			end
 		end
 	end

@@ -6,16 +6,29 @@ local json = require "json"
 
 local calc = {}
 
+local gate = newgate(calc)
+
 function calc.call(...)
-	return skynet.call("CALCULATOR", "lua", ...)
+	local r, push, mongo_actions = skynet.call("CALCULATOR", "lua", ...)
+    skynet.fork(function ()
+        if push then
+            for msg,players in pairs(push) do
+                for i,pid in ipairs(players) do
+                    gate:send_push(pid, msg)
+                end
+            end
+        end
+
+        if mongo_actions then
+            -- todo
+        end
+    end)
+    return r
 end
 
 function calc.send( ... )
 	return skynet.send("CALCULATOR", "lua", ...)
 end
-
-
-local gate = newgate(calc)
 
 
 local function start_websocket_server(protocol, port)
