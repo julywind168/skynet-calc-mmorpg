@@ -34,6 +34,11 @@ local function newclient(conn, id, pid)
 		conn = newconn
 	end
 
+	function self:close()
+		conn.client = nil
+		conn.close()
+	end
+
 	function self:send(msg)
 		self.msgidx = self.msgidx + 1
 		self.msgcache[self.msgidx] = msg
@@ -70,9 +75,9 @@ return function (calc)
 				dump("Login OK", p)
 				local old_c = client_map[p.id]
 				if old_c then
-					-- todo, killout
+					old_c:close()
 				end
-				
+
 				calc.call("login", p.id, p)
 
 				local c = newclient(conn, id, p.id)
