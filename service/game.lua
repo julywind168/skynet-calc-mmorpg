@@ -12,6 +12,25 @@ local db = new_mongo(mongo_conf)
 local request = new_request(db, calc)
 
 
+local function load_player(pid, ip)
+    local p = db.user.find_one({id = pid}, {_id = false})
+    if not p then
+        p = {
+            id = pid,
+            gold = 0
+        }
+        db.user.insert_one(p)
+    end
+    return p
+end
+
+
+local function auth(msg, ip)
+    assert(msg.id and msg.password == "123")
+    return true, load_player(msg.id, ip)
+end
+
+
 -- req: {cmd, ...}
 local function handle(pid, req)
     local cmd = req[1]
@@ -24,7 +43,7 @@ local function handle(pid, req)
     end
 end
 
-local gate = new_gate(handle)
+local gate = new_gate(auth, handle)
 
 
 function calc.call(...)
@@ -39,7 +58,9 @@ function calc.call(...)
         end
 
         if mongo_actions then
-            -- todo
+            for _,item in ipairs(mongo_actions) do
+                db[item.coll][item.action](table.unpack(item.params))
+            end
         end
     end)
     return r

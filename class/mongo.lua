@@ -86,6 +86,10 @@ return function (conf)
 	end
 
 	-- Ex
+	function m.patch(coll, query, patch)
+		return db[coll]:safe_update(query, {["$set"] = patch})
+	end
+
 	function m.count(coll, query)
 		return db[coll]:find(query):count()
 	end

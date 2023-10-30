@@ -11,7 +11,7 @@ local function exec(session, cmd, ...)
         f(game, ...)
     else
         local r = f(game, ...)
-        return calc.pack(r, gamex:collect("socket_push"), gamex:collect("mongo_action"))
+        return calc.pack(r, gamex:collect("socket_push"), gamex:collect("mongo_actions"))
     end
 end
 

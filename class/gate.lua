@@ -3,21 +3,6 @@ local skynet = require "skynet"
 local MAX_CACHE_MSG = 256
 
 
-local function load_player(pid, ip)
-	return {
-		id = pid,
-		gold = 100,
-		ip = ip
-	}
-end
-
-
-local function auth(msg, ip)
-	assert(msg.id and msg.password == "123")
-	return true, load_player(msg.id, ip)
-end
-
-
 local function newclient(conn, id, pid)
 
 	local self = {
@@ -58,7 +43,7 @@ local function newclient(conn, id, pid)
 end
 
 
-return function (handle)
+return function (auth, handle)
 
 	local client_map = {}	-- pid -> client
 
@@ -142,7 +127,7 @@ return function (handle)
 				local c = conn.client
 				local r = handle(c.pid, msg.request)
 				
-				if session > 0 then
+				if msg.session > 0 then
 					r = r or {}
 					r.session = msg.session
 					c.send(r)
