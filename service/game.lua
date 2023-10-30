@@ -1,12 +1,31 @@
 local skynet = require "skynet"
 local socket = require "skynet.socket"
 local websocket = require "http.websocket"
-local newgate = require "gate"
 local json = require "json"
+local new_gate = require "class.gate"
+local new_mongo = require "class.mongo"
+local new_request = require "game_request"
+local mongo_conf = require "conf.mongo"
 
 local calc = {}
+local db = new_mongo(mongo_conf)
+local request = new_request(db, calc)
 
-local gate = newgate(calc)
+
+-- req: {cmd, ...}
+local function handle(pid, req)
+    local cmd = req[1]
+    local f = request[cmd]
+    if f then
+        return f(pid, table.unpack(req, 2))
+    else
+        table.insert(req, 2, pid)               -- client request, param #1 default pid
+        return calc.call(table.unpack(req))
+    end
+end
+
+local gate = new_gate(handle)
+
 
 function calc.call(...)
 	local r, push, mongo_actions = skynet.call("CALCULATOR", "lua", ...)
@@ -87,5 +106,6 @@ end
 
 
 skynet.start(function ()
-    start_websocket_server("ws", 8888)
+    db("start")
+    skynet.fork(start_websocket_server, "ws", 8888)
 end)

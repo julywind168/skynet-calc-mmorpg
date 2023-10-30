@@ -58,7 +58,7 @@ local function newclient(conn, id, pid)
 end
 
 
-return function (calc)
+return function (handle)
 
 	local client_map = {}	-- pid -> client
 
@@ -87,7 +87,7 @@ return function (calc)
 					old_c.close()
 				end
 
-				calc.call("login", p.id, p)
+				handle(p.id, {"login", p})
 
 				local c = newclient(conn, id, p.id)
 				client_map[p.id] = c
@@ -138,18 +138,13 @@ return function (calc)
 					reconnect(msg)
 				end
 			else
-				-- msg: {session = 1, action = {"playcard", "pid", ...}}
-
+				-- msg: {session = 1, request = {"playcard", "pid", ...}}
 				local c = conn.client
-
-				local session = msg.session
-				local action = msg.action
-
-				local r = calc.call(table.unpack(action))
-
+				local r = handle(c.pid, msg.request)
+				
 				if session > 0 then
 					r = r or {}
-					r.session = session
+					r.session = msg.session
 					c.send(r)
 				end
 			end

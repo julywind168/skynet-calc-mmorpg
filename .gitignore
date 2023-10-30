@@ -6,3 +6,4 @@ luaclib.*
 *.dSYM
 .DS_Store
 .vscode
+conf/mongo.lua
