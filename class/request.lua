@@ -1,10 +1,10 @@
 return function (db, calc)
 
 
-	local request = {}
+	local self = {}
 
 
 
 
-	return request
+	return self
 end

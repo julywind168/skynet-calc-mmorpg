@@ -4,7 +4,7 @@ local websocket = require "http.websocket"
 local json = require "json"
 local new_gate = require "class.gate"
 local new_mongo = require "class.mongo"
-local new_request = require "game_request"
+local new_request = require "class.request"
 local mongo_conf = require "conf.mongo"
 
 local calc = {}
