@@ -5,8 +5,7 @@ skynet-calculator mmorpg server
 ## Build
 ```
 	1. cd skynet & git checkout calc & build
-	2. cp skynet/luaclib/skynet.so luaclib/skynet.so
-	3. ./start.sh
+	2. ./start.sh
 ```
 
 ## 框架结构

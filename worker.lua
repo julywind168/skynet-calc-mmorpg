@@ -1,4 +1,4 @@
-package.cpath = "luaclib/?.so;"..package.cpath
+package.cpath = "luaclib/?.so;skynet/luaclib/?.so;"..package.cpath
 local calc = require "skynet.calc"
 
 local game = require "game".game
