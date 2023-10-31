@@ -123,9 +123,9 @@ return function (auth, handle)
 					reconnect(msg)
 				end
 			else
-				-- msg: {session = 1, request = {"playcard", "pid", ...}}
+				-- msg: {session = 1, payload = {"playcard", "pid", ...}}
 				local c = conn.client
-				local r = handle(c.pid, msg.request)
+				local r = handle(c.pid, msg.payload)
 				
 				if msg.session > 0 then
 					r = r or {}

@@ -12,22 +12,32 @@ local db = new_mongo(mongo_conf)
 local request = new_request(db, calc)
 
 
-local function load_player(pid, ip)
-    local p = db.user.find_one({id = pid}, {_id = false})
-    if not p then
-        p = {
-            id = pid,
-            gold = 0
-        }
-        db.user.insert_one(p)
-    end
+local function reg_player(id, password)
+    local p = {
+        id = id,
+        password = password,
+        gold = 0
+    }
+    db.player.insert_one(p)
     return p
 end
 
 
 local function auth(msg, ip)
-    assert(msg.id and msg.password == "123")
-    return true, load_player(msg.id, ip)
+    local id = assert(msg.id)
+    local password = assert(msg.password)
+
+    local p = db.player.find_one({id = id}, {_id = false})
+    if p then
+        if p.password == password then
+            p.password = nil
+            return true, p
+        else
+            return false, "password error"
+        end
+    else
+        return true, reg_player(id, password)
+    end
 end
 
 
