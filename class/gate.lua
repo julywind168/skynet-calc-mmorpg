@@ -27,6 +27,7 @@ local function newclient(conn, id, pid)
 	function self.send(msg)
 		self.msgidx = self.msgidx + 1
 		self.msgcache[self.msgidx] = msg
+		msg.index = self.msgidx
 
 		if self.msgidx > MAX_CACHE_MSG then
 			self.msgcache[self.msgidx - MAX_CACHE_MSG] = nil
