@@ -6,8 +6,8 @@ local LobbyPlayer = require "gameclass.LobbyPlayer"
 return function(game, lock, new)
 
     lock("lobby")(function ()
-        function game:login(pid, p)
-            calc.error(string.format("player login ok, %s", table.tostring(p)))
+        function game:login(pid, rtt, p)
+            calc.error(string.format("player login ok %s", table.tostring(p)))
             self.lobby.players[pid] = new(LobbyPlayer, p)
             self.lobby.online = self.lobby.online + 1
         end

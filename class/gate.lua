@@ -73,7 +73,7 @@ return function (auth, handle)
 					old_c.close()
 				end
 
-				handle(p.id, {"login", p})
+				handle(p.id, {"login", msg.rtt, p})
 
 				local c = newclient(conn, id, p.id)
 				client_map[p.id] = c
@@ -115,8 +115,11 @@ return function (auth, handle)
 
 		function conn.message(msg)
 			if conn.verified == false then
+				-- msg: {cmd = "ping", time = 123}
+				if msg.cmd == "ping" then
+					conn.send{time = msg.time}
 				-- msg: {cmd = "login", id = "xx", password = "123"}
-				if msg.cmd == "login" then
+				elseif msg.cmd == "login" then
 					login(msg)
 				else
 					-- msg: {cmd = "reconnect", id = "xx", token = "xxx", msgidx = 0}
