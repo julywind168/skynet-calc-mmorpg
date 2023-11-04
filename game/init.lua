@@ -1,16 +1,20 @@
+require "preload.enum"
 require "preload.string"
 require "preload.table"
+require "preload.calc.dump"
 
 local moudle = {
     "lobby_login",
-    "lobby_request"
+    "lobby_request",
+    "scene_request"
 }
 
 local game = {
     lobby = {
         online = 0,
         players = {}
-    }
+    },
+    scenes = {}
 }
 
 local rwlock = {}

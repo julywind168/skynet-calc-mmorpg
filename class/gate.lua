@@ -32,8 +32,10 @@ local function newclient(conn, id, pid)
 		if self.msgidx > MAX_CACHE_MSG then
 			self.msgcache[self.msgidx - MAX_CACHE_MSG] = nil
 		end
-
-		conn.send(msg)
+		
+		if self.connected then
+			conn.send(msg)
+		end
 	end
 
 	function self.disconnect()
@@ -54,6 +56,7 @@ return function (auth, handle)
 	function self:send_push(pid, msg)
 		local c = client_map[pid]
 		if c then
+			msg.session = 0
 			c.send(msg)
 		else
 			skynet.error(string.format("Push error, can't found player %s", pid))
@@ -73,7 +76,7 @@ return function (auth, handle)
 					old_c.close()
 				end
 
-				handle(p.id, {"login", msg.rtt, p})
+				handle(p.id, {"login", p})
 
 				local c = newclient(conn, id, p.id)
 				client_map[p.id] = c

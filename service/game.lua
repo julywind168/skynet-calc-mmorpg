@@ -12,11 +12,20 @@ local db = new_mongo(mongo_conf)
 local request = new_request(db, calc)
 
 
-local function reg_player(id, password)
+local function reg_player(id, password, ip)
     local p = {
         id = id,
         password = password,
-        gold = 0
+        gold = 0,
+        lastlogin = {
+            ip = ip,
+            time = os.time()
+        },
+        scene = {
+            id = "main",
+            x = 0,
+            y = 0
+        }
     }
     db.player.insert_one(p)
     return p
@@ -36,7 +45,7 @@ local function auth(msg, ip)
             return false, "password error"
         end
     else
-        return true, reg_player(id, password)
+        return true, reg_player(id, password, ip)
     end
 end
 

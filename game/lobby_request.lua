@@ -1,7 +1,7 @@
 local calc = require "skynet.calc"
 
 
-return function(game, lock)
+return function(game, lock, new)
 
     local function myplayer(pid)
         return game.lobby.players[pid]
