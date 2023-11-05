@@ -1,9 +1,6 @@
 local calc = require "skynet.calc"
 
 
-
-local Direction = ENUM{"Up", "Left", "Down", "Right"}
-
 --[[
 {
 	id = "ID"
@@ -34,7 +31,7 @@ end
 		x = 0,
 		y = 0,
 		speed: 0,
-		direction: Direction
+		direction: (x,y)
 	}
 ]]
 function ScenePlayer:update_position(position)
@@ -46,18 +43,8 @@ end
 
 -- 根据 rtt 预测当前的位置
 function ScenePlayer:guess(position)
-	if position.speed > 0 then
-		if position.direction == Direction.Up then
-			position.y = position.y + math.floor(position.speed * self.rtt/1000/2)
-		elseif position.direction == Direction.Left then
-			position.x = position.x - math.floor(position.speed * self.rtt/1000/2)
-		elseif position.direction == Direction.Down then
-			position.y = position.y - math.floor(position.speed * self.rtt/1000/2)
-		else
-			assert(position.direction == Direction.Right)
-			position.x = position.x + math.floor(position.speed * self.rtt/1000/2)
-		end
-	end
+	position.x = position.x + position.direction.x * position.speed * self.rtt/1000/2)
+	position.y = position.y + position.direction.y * position.speed * self.rtt/1000/2)
 	return position
 end
 
