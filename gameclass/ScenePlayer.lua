@@ -43,8 +43,8 @@ end
 
 -- 根据 rtt 预测当前的位置
 function ScenePlayer:guess(position)
-	position.x = position.x + position.direction.x * position.speed * self.rtt/1000/2)
-	position.y = position.y + position.direction.y * position.speed * self.rtt/1000/2)
+	position.x = position.x + position.direction.x * position.speed * self.rtt/1000/2
+	position.y = position.y + position.direction.y * position.speed * self.rtt/1000/2
 	return position
 end
 
