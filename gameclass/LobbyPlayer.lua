@@ -5,7 +5,7 @@ local LobbyPlayer = {}
 function LobbyPlayer:sign()
 	self.gold = self.gold + 100
 
-	db.user.patch({id = self.id}, {gold = self.gold})
+	db.player.patch({id = self.id}, {gold = self.gold})
 
 	return {ok = true}
 end

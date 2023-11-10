@@ -35,11 +35,26 @@ function Scene:join(p)
 	return self:info()
 end
 
+function Scene:leave(pid)
+	local p, i = self:find_player(pid)
+
+	if p then
+		table.remove(self.players, i)
+		self:broadcast {
+			cmd = "scene_player_leaved",
+			pid = pid
+		}
+		p.base.scene.x = p.x
+		p.base.scene.y = p.y
+		return p.base.scene
+	end
+end
+
 
 function Scene:find_player(pid)
 	for i,p in ipairs(self.players) do
 		if p.id == pid then
-			return p
+			return p, i
 		end
 	end
 end

@@ -145,7 +145,19 @@ local function start_websocket_server(protocol, port)
 end
 
 
+local function logout(pid)
+    skynet.error("logout", pid)
+    calc.call("logout", pid)
+end
+
+
 skynet.start(function ()
     db("start")
     skynet.fork(start_websocket_server, "ws", 8888)
+    skynet.fork(function ()
+        while true do
+            skynet.sleep(10 * 100)  -- 10s once tick
+            gate.check_disconnected_clients(logout)
+        end
+    end)
 end)

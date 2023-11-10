@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+local conf = require "conf"
 
 local MAX_CACHE_MSG = 256
 
@@ -38,8 +39,10 @@ local function newclient(conn, id, pid)
 		end
 	end
 
+
 	function self.disconnect()
 		self.connected = false
+		self.disconnect_time = os.time()
 	end
 
 	return self
@@ -145,6 +148,18 @@ return function (auth, handle)
 		function conn.disconnect()
 			if conn.client then
 				conn.client.disconnect()
+			end
+		end
+	end
+
+
+	function self.check_disconnected_clients(logout)
+		local now = os.time()
+		for pid,c in pairs(client_map) do
+			if c.connected == false and now - c.disconnect_time > conf.client_delay_logout_time then
+				c.close()
+				logout(pid)
+				client_map[pid] = nil
 			end
 		end
 	end
