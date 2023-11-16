@@ -79,7 +79,7 @@ return function (auth, handle)
 					old_c.close()
 				end
 
-				handle(p.id, {"login", p})
+				handle(p.id, "login", {p = p})
 
 				local c = newclient(conn, id, p.id)
 				client_map[p.id] = c
@@ -133,9 +133,9 @@ return function (auth, handle)
 					reconnect(msg)
 				end
 			else
-				-- msg: {session = 1, payload = {"playcard", "pid", ...}}
+				-- request msg: {session = 1, name = "move", params = {}}
 				local c = conn.client
-				local r = handle(c.pid, msg.payload)
+				local r = handle(c.pid, msg.name, msg.params)
 				
 				if msg.session > 0 then
 					r = r or {}

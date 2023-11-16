@@ -7,10 +7,10 @@ return function(game, lock, new)
         return game.lobby.players[pid]
     end
 
-    lock("lobby.players.#1")(function ()
+    lock("lobby.players.#pid")(function ()
 
-        function game:sign(pid)
-            return myplayer(pid):sign()
+        function game:sign()
+            return myplayer(self.pid):sign()
         end
 
     end)

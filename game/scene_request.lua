@@ -12,21 +12,21 @@ return function(game, lock, new)
         return game.scenes[sid]
     end
 
-    lock("lobby.players.#1, scenes.#2")(function ()
+    lock("lobby.players.#pid, scenes.#sid")(function ()
 
-        function game:scene_info(pid, sid)
-            return myscene(sid):info()
+        function game:scene_info()
+            return myscene(self.sid):info()
         end
 
-        function game:scene_join(pid, sid, rtt)
-            if myscene(sid):find_player(pid) then
-                return myscene(sid):info()
+        function game:scene_join()
+            if myscene(self.sid):find_player(self.pid) then
+                return myscene(self.sid):info()
             end
-            return myscene(sid):join(new(ScenePlayer, {base = myplayer(pid), rtt = rtt}):init())
+            return myscene(self.sid):join(new(ScenePlayer, {base = myplayer(self.pid), rtt = self.rtt}):init())
         end
 
-        function game:scene_sync_my_position(pid, sid, position)
-            myscene(sid):sync_position(pid, position)
+        function game:scene_sync_my_position()
+            myscene(self.sid):sync_position(self.pid, self.position)
         end
     end)
 end

@@ -50,15 +50,16 @@ local function auth(msg, ip)
 end
 
 
--- req: {cmd, ...}
-local function handle(pid, req)
-    local cmd = req[1]
-    local f = request[cmd]
+local function handle(pid, name, params)
+    local f = request[name]
     if f then
-        return f(pid, table.unpack(req, 2))
+        return f(params)
     else
-        table.insert(req, 2, pid)               -- client request, param #1 default pid
-        return calc.call(table.unpack(req))
+        -- check invalid client
+        if params and params.pid then
+            assert(params.pid == pid)
+        end
+        return calc.call(name, params)
     end
 end
 
@@ -147,7 +148,7 @@ end
 
 local function logout(pid)
     skynet.error("logout", pid)
-    calc.call("logout", pid)
+    calc.call("logout", {pid = pid})
 end
 
 

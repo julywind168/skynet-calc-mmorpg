@@ -18,9 +18,9 @@ end
 local function exec(session, cmd, ...)
     local f = assert(game[cmd], string.format("Undefined action %s", tostring(cmd)))
     if session == 0 then
-        f(game, ...)
+        f(...)
     else
-        local r = f(game, ...)
+        local r = f(...)
         return calc.pack(r, gamex:collect("socket_push"), gamex:collect("mongo_actions"))
     end
 end

@@ -8,20 +8,20 @@ local ScenePlayer = require "gameclass.ScenePlayer"
 return function(game, lock, new)
 
     lock("lobby")(function ()
-        function game:login(pid, p)
-            -- calc.error(string.format("player login ok %s", table.tostring(p)))
-            self.lobby.players[pid] = new(LobbyPlayer, p)
-            self.lobby.online = self.lobby.online + 1
+        function game:login()
+            -- calc.error(string.format("player login ok %s", table.tostring(self.p)))
+            game.lobby.players[self.p.id] = new(LobbyPlayer, self.p)
+            game.lobby.online = game.lobby.online + 1
         end
     end)
 
     lock("*")(function()
-        function game:logout(pid)
-            self.lobby.players[pid] = nil
-            self.lobby.online = self.lobby.online - 1
-            local scene = self.scenes["main"]:leave(pid)
+        function game:logout()
+            game.lobby.players[self.pid] = nil
+            game.lobby.online = game.lobby.online - 1
+            local scene = game.scenes["main"]:leave(self.pid)
             if scene then
-                db.player.patch({id = pid}, {scene = scene})
+                db.player.patch({id = self.pid}, {scene = scene})
             end
         end
     end)

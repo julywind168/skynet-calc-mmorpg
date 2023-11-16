@@ -1,14 +1,14 @@
 return function (db, calc)
 
 
-	local self = {}
+	local request = {}
 
 
-	function self.heartbeat(pid)
+	function request:heartbeat()
 		return {ok = true}
 	end
 
 
 
-	return self
+	return request
 end
