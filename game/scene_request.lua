@@ -28,5 +28,9 @@ return function(game, lock, new)
         function game:scene_sync_my_position()
             myscene(self.sid):sync_position(self.pid, self.position)
         end
+
+        function game:scene_sync_my_attack()
+            myscene(self.sid):sync_attack(self.pid, self.type, self.angle)
+        end
     end)
 end

@@ -1,5 +1,6 @@
 local calc = require "skynet.calc"
 local gamex = require "game.extend"
+local SwordType = require "game.enums".SwordType
 
 --[[
 	id = "main"
@@ -11,6 +12,16 @@ local Scene = {}
 
 function Scene:init()
 	self.players = {}
+end
+
+
+function Scene:sync_attack(pid, type, angle)
+	self:broadcast{
+		cmd = "scene_sync_attack",
+		pid = pid,
+		type = type,
+		angle = angle
+	}
 end
 
 
