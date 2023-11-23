@@ -19,12 +19,21 @@ function ScenePlayer:init()
 	self.id = self.base.id
 	self.x = self.base.scene.x
 	self.y = self.base.scene.y
+	self.hp = self.base.scene.hp
 
 	calc.error("ScenePlayer init", self.id)
 
 	return self
 end
 
+function ScenePlayer:sub_hp(value)
+	self.hp = self.hp - value
+end
+
+
+function ScenePlayer:revive()
+	self.hp = 100
+end
 
 --[[
 	position: {
@@ -53,7 +62,8 @@ function ScenePlayer:info()
 	return {
 		id = self.id,
 		x = self.x,
-		y = self.y
+		y = self.y,
+		hp = self.hp
 	}
 end
 

@@ -1,6 +1,9 @@
 local calc = require "skynet.calc"
 local gamex = require "game.extend"
+local conf = require "conf"
 local SwordType = require "game.enums".SwordType
+local rect_circle_intersect = require "game.utils.rect_circle_intersect"
+
 
 --[[
 	id = "main"
@@ -15,12 +18,48 @@ function Scene:init()
 end
 
 
+function Scene:_get_hitbox_center(p, angle, sword)
+	local c = {x = p.x, y = p.y}
+	local a = math.rad(angle)
+	c.x = c.x + sword.half_diagonal * math.cos(a)
+	c.y = c.y + sword.half_diagonal * math.sin(a)
+	return c
+end
+
+
 function Scene:sync_attack(pid, type, angle)
+	local hit_players = {}
+
+	local p = self:find_player(pid)
+	local sword = conf.swords[type]
+	local c = self:_get_hitbox_center(p, angle, sword)
+	local h = sword.half_length
+
+
+	calc.error("sync_attack", pid, type, angle)
+
+	for _,other in ipairs(self.players) do
+		if other.id ~= pid and other.hp > 0 then
+			if rect_circle_intersect(c, h, angle, other, conf.avatar_radius) then
+				local damage = math.min(sword.damage, other.hp)
+				calc.error("hit", other.id, damage)
+
+				other:sub_hp(damage)
+				table.insert(hit_players, {
+					id = other.id,
+					damage = damage,
+					dead = other.hp == 0
+				})
+			end
+		end
+	end
+
 	self:broadcast{
 		cmd = "scene_sync_attack",
 		pid = pid,
 		type = type,
-		angle = angle
+		angle = angle,
+		hit_players = hit_players
 	}
 end
 
@@ -32,6 +71,18 @@ function Scene:sync_position(pid, position)
 		pid = pid,
 		position = position
 	}
+end
+
+
+function Scene:revive(pid)
+	local p = self:find_player(pid)
+	if p then
+		p:revive()
+		self:broadcast {
+			cmd = "scene_player_revived",
+			pid = pid
+		}
+	end
 end
 
 
@@ -57,6 +108,7 @@ function Scene:leave(pid)
 		}
 		p.base.scene.x = p.x
 		p.base.scene.y = p.y
+		p.base.scene.hp = p.hp
 		return p.base.scene
 	end
 end

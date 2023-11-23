@@ -32,5 +32,9 @@ return function(game, lock, new)
         function game:scene_sync_my_attack()
             myscene(self.sid):sync_attack(self.pid, self.type, self.angle)
         end
+
+        function game:scene_revive()
+            myscene(self.sid):revive(self.pid)
+        end
     end)
 end

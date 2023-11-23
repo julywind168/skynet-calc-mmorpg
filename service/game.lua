@@ -23,6 +23,7 @@ local function reg_player(id, password, ip)
         },
         scene = {
             id = "main",
+            hp = 100,           -- init HP 100
             x = 0,
             y = 0
         }
