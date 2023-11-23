@@ -1,6 +1,9 @@
 # skynet-calc-mmorpg
 这个一个简单 mmo 开源游戏, 目的是简单演示 [skynet-calc](https://github.com/HYbutterfly/skynet/tree/calc) 的用法
 
+对应的 [client](https://github.com/HYbutterfly/skynet-calc-mmorpg-client) 基于 cocos creator v3.8.1 开发
+
+
 
 ## Build
 ```
