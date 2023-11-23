@@ -73,7 +73,7 @@ return function (auth, handle)
 		local function login(msg)
 			local ok, p = auth(msg, conn.ip)
 			if ok then
-				dump("Login OK", p)
+				-- dump("Login OK", p)
 				local old_c = client_map[p.id]
 				if old_c then
 					old_c.close()

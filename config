@@ -31,4 +31,5 @@ logpath = "."
 
 if $DAEMON then
 	daemon = "./skynet.pid"
+	logger = "error.log"
 end

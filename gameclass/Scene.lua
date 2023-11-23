@@ -84,7 +84,7 @@ end
 
 function Scene:join(p)
 	self:log(string.format("Player['%s'] joined", p.id))
-	dump(p)
+	-- dump(p)
 	self:broadcast{
 		cmd = "scene_player_joined",
 		p = p:info()
