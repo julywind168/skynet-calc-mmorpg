@@ -7,8 +7,9 @@
 
 ## Build
 ```
-	1. cd skynet & git checkout calc & build
-	2. ./start.sh
+	1. git submodule update --init
+	2. cd skynet & build
+	3. ./start.sh
 ```
 
 ## 框架结构
@@ -26,4 +27,4 @@
 ## 在线试玩 (手机端)
 
 1. 关注微信公众号 "纸鸢在线" 并发送 "mmo"
-2. 手机浏览器打开 [mmorpg-demo](https://website-9gh9arvn0ad71845-1251951859.tcloudbaseapp.com/mmorpg-demo/index.html) 
+2. 手机浏览器打开 [mmorpg-demo](http://website-9gh9arvn0ad71845-1251951859.tcloudbaseapp.com/mmorpg-demo/index.html) 
