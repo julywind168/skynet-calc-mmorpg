@@ -132,6 +132,8 @@ local function start_websocket_server(protocol, port)
     end
 
     function handle.error(fd)
+        conn_map[fd].disconnect()
+        conn_map[fd] = nil
         skynet.error("ws error from: " .. tostring(fd))
     end
 
