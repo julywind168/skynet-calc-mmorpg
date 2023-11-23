@@ -35,14 +35,10 @@ function Scene:sync_attack(pid, type, angle)
 	local c = self:_get_hitbox_center(p, angle, sword)
 	local h = sword.half_length
 
-
-	calc.error("sync_attack", pid, type, angle)
-
 	for _,other in ipairs(self.players) do
 		if other.id ~= pid and other.hp > 0 then
 			if rect_circle_intersect(c, h, angle, other, conf.avatar_radius) then
 				local damage = math.min(sword.damage, other.hp)
-				calc.error("hit", other.id, damage)
 
 				other:sub_hp(damage)
 				table.insert(hit_players, {

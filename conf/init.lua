@@ -6,7 +6,7 @@ local avatar = {
 
 local conf = {
 
-	client_delay_logout_time = 1 * 20,
+	client_delay_logout_time = 1 * 60,
 
 	avatar = avatar,
 	avatar_radius = math.sqrt(avatar.width^2 + avatar.height^2),
@@ -14,14 +14,14 @@ local conf = {
 	swords = {
 		-- IceSword
 		{
-			width = 393*0.12,
-			height = 1234*0.12 + 300 + avatar.height/2,
+			width = 1234*0.12 + 300 + avatar.height/2,
+			height = 393*0.12,
 			damage = 10
 		},
 		-- FireSword
 		{
-			width = 1175 * 0.15,
-			height = 1221*0.15 + 400 + avatar.height/2,
+			width = 1221*0.15 + 400 + avatar.height/2,
+			height = 1175 * 0.15,
 			damage = 20
 		}
 	}
